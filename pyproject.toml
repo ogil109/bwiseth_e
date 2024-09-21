@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "bwiseth-extract"
+version = "0.1.0"
+description = "Extraction of raw data from public APIs and writing to database."
+authors = ["Oscar Gil <hello@oscargilbalaguer.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
