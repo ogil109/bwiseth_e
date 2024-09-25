@@ -1,2 +1,26 @@
+# Python-related ignores
 *.pyc
-venv/
+__pycache__/
+*.pyo
+*.pyd
+*.env
+
+# Pulumi state files and logs (sensitive data)
+Pulumi.*.yaml  # Ignore stack-specific config files for security
+.pulumi/       # Pulumi cache and metadata
+*.bak          # Pulumi backup files
+*.log          # Pulumi logs
+
+# Terraform (if you use it alongside Pulumi)
+*.tfstate
+*.tfstate.backup
+
+# AWS credential files (NEVER commit)
+.aws/         # AWS credentials (stored locally)
+
+# IDE-related ignores (VSCode, PyCharm, etc.)
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
