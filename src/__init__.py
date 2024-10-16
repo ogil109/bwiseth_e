@@ -16,13 +16,5 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Function to initialize the database (create tables, etc.)
 def init_db():
-    import models  # Import models to register them with SQLAlchemy
+    from ingestion import models  # Import models to register them with SQLAlchemy
     Base.metadata.create_all(bind=engine)
-
-# Dependency function to get a new database session
-def get_db_session():
-    session = SessionLocal()
-    try:
-        yield session
-    finally:
-        session.close()
