@@ -1,16 +1,15 @@
 import websockets
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from src import get_db_session
 from src.ingestion.models import CryptoPrice
 
 # WebSocket URL for real-time crypto prices (BTC/ETH)
-WS_URL = "wss://stream.binance.com:9443/ws/btcusdt@trade/ethusdt@trade"
+WS_URL = "wss://stream.binance.com:9443/stream?streams=btcusdt@aggTrade/ethusdt@aggTrade"
 
 # Insert data into the database
 def insert_into_db(symbol, price, timestamp):
     with get_db_session() as session:
-        # use the session here
         crypto_price = CryptoPrice(symbol=symbol, price=price, timestamp=timestamp)
         session.add(crypto_price)
         session.commit()
@@ -24,7 +23,7 @@ async def listen():
             
             symbol = data['s']
             price = float(data['p'])
-            timestamp = datetime.utcnow()
+            timestamp = datetime.now(timezone.utc)
             
             print(f"Received data: {symbol} - {price} at {timestamp}")
             
