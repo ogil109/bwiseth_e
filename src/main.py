@@ -1,5 +1,5 @@
 import asyncio
-from src.ingestion.extract import listen
+from src.ingestion.extract_agg import listen
 from src import init_db
 
 # Entry point for running the script
