@@ -1,5 +1,7 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime
+from sqlalchemy import Column, DateTime, Float, Integer, String
+
 from src import Base
+
 
 class KlineData(Base):
     __tablename__ = 'kline_data'
@@ -17,7 +19,7 @@ class KlineData(Base):
     taker_buy_quote_vol = Column(Float, nullable=True)  # Taker buy quote asset volume
     num_trades = Column(Integer, nullable=False)  # Number of trades
     start_time = Column(DateTime, nullable=False)  # Start time of the Kline interval
-    end_time = Column(DateTime, nullable=False)  # End time of the Kline interval (or when it closes)
+    end_time = Column(DateTime, nullable=False)  # End time of the Kline interval (or close)
 
     def __repr__(self):
-        return f"<Kline(symbol={self.symbol}, int={self.interval}, O={self.open_price}, H={self.high_price}, L={self.low_price}, C={self.close_price})>"
+        return f"<Kline(symbol={self.symbol}, int={self.interval}, O={self.open_price}, H={self.high_price}, L={self.low_price}, C={self.close_price})>"  # noqa: E501

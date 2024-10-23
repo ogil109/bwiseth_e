@@ -1,13 +1,16 @@
-import websockets
 import json
-from datetime import datetime
-from src import get_db_session
+from datetime import datetime, timezone
+from typing import NoReturn
+
+import websockets
+
 from src.ingestion.models import KlineData
+from src.utils.database import get_db_session
 
 # WebSocket URL for real-time crypto prices (BTC/ETH)
 WS_URL = "wss://stream.binance.com:9443/stream?streams=btcusdt@kline_1m/ethusdt@kline_1m/btcusdt@kline_15m/ethusdt@kline_15m/btcusdt@kline_4h/ethusdt@kline_4h/btcusdt@kline_1d/ethusdt@kline_1d/btcusdt@kline_1w/ethusdt@kline_1w"
 
-def insert_kline(symbol, interval, open_price, close_price, high_price, low_price, volume, quote_volume, taker_buy_base_vol, taker_buy_quote_vol, num_trades, start_time, end_time):
+def insert_kline(symbol, interval, open_price, close_price, high_price, low_price, volume, quote_volume, taker_buy_base_vol, taker_buy_quote_vol, num_trades, start_time, end_time):  # noqa: E501
     with get_db_session() as session:
         kline_data = KlineData(
             symbol=symbol,
@@ -28,15 +31,15 @@ def insert_kline(symbol, interval, open_price, close_price, high_price, low_pric
         session.commit()
 
 # WebSocket listener function
-async def listen():
+async def listen() -> NoReturn:
     async with websockets.connect(WS_URL) as websocket:
         while True:
             message = await websocket.recv()
             data = json.loads(message)
-            
+
             # Extract relevant data from the payload
             kline_data = data['data']['k']
-            
+
             symbol = kline_data['s']
             interval = kline_data['i']
             open_price = float(kline_data['o'])
@@ -48,9 +51,9 @@ async def listen():
             taker_buy_base_vol = float(kline_data['V'])
             taker_buy_quote_vol = float(kline_data['Q'])
             num_trades = int(kline_data['n'])
-            
-            start_time = datetime.fromtimestamp(kline_data['t'] / 1000, tz=datetime.timezone.utc)  # Kline start time
-            end_time = datetime.fromtimestamp(kline_data['T'] / 1000, tz=datetime.timezone.utc)    # Kline close time
+
+            start_time = datetime.fromtimestamp(kline_data['t'] / 1000, tz=timezone.utc)
+            end_time = datetime.fromtimestamp(kline_data['T'] / 1000, tz=timezone.utc)
 
             # Insert the price into the database
             insert_kline(

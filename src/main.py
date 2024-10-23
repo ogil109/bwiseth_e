@@ -1,6 +1,7 @@
 import asyncio
-from src.ingestion.extract_agg import listen
+
 from src import init_db
+from src.ingestion.extract_kline import listen
 
 # Entry point for running the script
 if __name__ == "__main__":
