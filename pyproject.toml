@@ -15,16 +15,31 @@ sqlalchemy = "^2.0.35"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.7.0"
 pre-commit = "^4.0.1"
+pytest = "^8.3.3"
+isort = "^5.13.2"
+black = "^24.10.0"
 
 [tool.ruff.lint]
-select = ["E", "F", "B", "I"]
-fixable = ["F", "I"]
+select = [
+    "F",  # Pyflakes-like linting rules (undefined names, unused imports, etc.)
+    "E",  # PEP8 error codes (excluding formatting handled by Black)
+    "W",  # PEP8 warnings (like indentation and whitespace issues)
+    "B",  # Bug-prone patterns (flake8-bugbear)
+    "C",  # Complexity checks (McCabe)
+]
 
 [tool.ruff]
 line-length = 100
 
 [tool.ruff.format]
 docstring-code-format = true
+
+[tool.black]
+line-length = 100
+
+[tool.isort]
+profile = "black"
+line_length = 100
 
 [build-system]
 requires = ["poetry-core"]
