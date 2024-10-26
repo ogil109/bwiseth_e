@@ -24,3 +24,5 @@ Pulumi.*.yaml  # Ignore stack-specific config files for security
 .DS_Store
 *.swp
 
+# Ruff cache
+.ruff_cache
