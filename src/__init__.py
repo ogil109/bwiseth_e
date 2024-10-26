@@ -14,7 +14,9 @@ engine = create_engine(DATABASE_URL, echo=True)
 # Create a configured "Session" class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 # Function to initialize the database (create tables, etc.)
 def init_db() -> None:
     from ingestion import models  # Import models to register them with SQLAlchemy  # noqa: F401
+
     Base.metadata.create_all(bind=engine)

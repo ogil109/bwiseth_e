@@ -4,7 +4,7 @@ from src import Base
 
 
 class KlineData(Base):
-    __tablename__ = 'kline_data'
+    __tablename__ = "kline_data"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     symbol = Column(String(10), nullable=False)  # Trading pair (e.g., BTCUSDT)
