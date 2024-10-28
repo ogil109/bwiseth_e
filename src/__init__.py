@@ -1,3 +1,5 @@
+import json
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -6,7 +8,9 @@ from sqlalchemy.orm import sessionmaker
 Base = declarative_base()
 
 # Database connection URL (RDS connection string)
-DATABASE_URL = "postgresql://admin:SuperSecretPassword@your-rds-host/crypto_db"
+with open("/app/config.json") as f:
+    config = json.load(f)
+DATABASE_URL = config["database_url"]
 
 # Create an SQLAlchemy engine
 engine = create_engine(DATABASE_URL, echo=True)
