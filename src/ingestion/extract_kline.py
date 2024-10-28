@@ -7,8 +7,23 @@ import websockets
 from src.ingestion.models import KlineData
 from src.utils.database import get_db_session
 
-# WebSocket URL for real-time crypto prices (BTC/ETH)
-WS_URL = "wss://stream.binance.com:9443/stream?streams=btcusdt@kline_1m/ethusdt@kline_1m/btcusdt@kline_15m/ethusdt@kline_15m/btcusdt@kline_4h/ethusdt@kline_4h/btcusdt@kline_1d/ethusdt@kline_1d/btcusdt@kline_1w/ethusdt@kline_1w"
+# WebSocket URL for real-time crypto prices
+with open("/app/config.json") as f:
+    config = json.load(f)
+
+intervals = config["market_data"]["intervals"]
+symbols = config["market_data"]["symbols"]
+
+url = base_url = "wss://stream.binance.com:9443/stream?streams="
+
+for symbol in symbols:
+    for interval in intervals:
+        if url != base_url:
+            url = url + f"/{symbol}@kline_{interval}"
+        else:
+            url = f"{base_url}{symbol}@kline_{interval}"
+
+WS_URL = url
 
 
 def insert_kline(

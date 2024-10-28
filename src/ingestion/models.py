@@ -21,5 +21,5 @@ class KlineData(Base):
     start_time = Column(DateTime, nullable=False)  # Start time of the Kline interval
     end_time = Column(DateTime, nullable=False)  # End time of the Kline interval (or close)
 
-    def __repr__(self):
-        return f"<Kline(symbol={self.symbol}, int={self.interval}, O={self.open_price}, H={self.high_price}, L={self.low_price}, C={self.close_price})>"  # noqa: E501
+    def __repr__(self) -> str:
+        return f"<Kline(symbol={self.symbol}, int={self.interval}, O={self.open_price}, C={self.close_price}, H={self.high_price}, L={self.low_price})>"  # noqa: E501
