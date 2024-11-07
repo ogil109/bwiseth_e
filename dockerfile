@@ -4,6 +4,15 @@ FROM python:3.12.6-slim
 # Set the working directory to /app
 WORKDIR /app
 
+# Copy the generate_env.sh script into the container
+COPY generate_env.sh .
+
+# Make the script executable
+RUN chmod +x ./generate_env.sh
+
+# Run the script to generate the .env file
+RUN generate_env.sh
+
 # Copy the pyproject.toml and poetry.lock files into the container
 COPY pyproject.toml poetry.lock ./
 
@@ -15,9 +24,6 @@ COPY . .
 
 # Expose the port that your app uses (if any)
 EXPOSE 8000
-
-# Set the environment variable for the database URL
-ENV DATABASE_URL=${DATABASE_URL}
 
 # Run the command to start your app
 CMD ["python", "src/main.py"]
