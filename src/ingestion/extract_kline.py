@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime, timezone
 from typing import NoReturn
 
@@ -8,11 +9,10 @@ from src.ingestion.models import KlineData
 from src.utils.database import get_db_session
 
 # WebSocket URL for real-time crypto prices
-with open("/app/config.json") as f:
-    config = json.load(f)
+market_data = json.loads(os.environ["market_data"])
 
-intervals = config["market_data"]["intervals"]
-symbols = config["market_data"]["symbols"]
+intervals = market_data["intervals"]
+symbols = market_data["symbols"]
 
 url = base_url = "wss://stream.binance.com:9443/stream?streams="
 
