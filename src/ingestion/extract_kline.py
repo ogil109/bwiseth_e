@@ -9,10 +9,8 @@ from src.ingestion.models import KlineData
 from src.utils.database import get_db_session
 
 # WebSocket URL for real-time crypto prices
-market_data = json.loads(os.environ["market_data"])
-
-intervals = market_data["intervals"]
-symbols = market_data["symbols"]
+intervals = os.environ["intervals"].split(",")
+symbols = os.environ["symbols"].split(",")
 
 url = base_url = "wss://stream.binance.com:9443/stream?streams="
 
