@@ -3,5 +3,12 @@
         "symbols": ["btcusdt", "ethusdt"],
         "intervals": ["1m", "15m", "4h", "1d", "1w"]
     },
-    "database_url": ""
+    "database": {
+        "host": "localhost",
+        "port": 5432,
+        "username": "postgres",
+        "password": "password",
+        "name": "postgres"
+    }
 }
+

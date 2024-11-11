@@ -1,4 +1,4 @@
-import json
+import os
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -7,10 +7,8 @@ from sqlalchemy.orm import sessionmaker
 # Base class for SQLAlchemy models
 Base = declarative_base()
 
-# Database connection URL (RDS connection string)
-with open("/app/config.json") as f:
-    config = json.load(f)
-DATABASE_URL = config["database_url"]
+# Build database connection string from environment variables
+DATABASE_URL = f"postgresql://{os.environ['database_username']}:{os.environ['database_password']}@{os.environ['database_host']}:{os.environ['database_port']}/{os.environ['database_name']}"
 
 # Create an SQLAlchemy engine
 engine = create_engine(DATABASE_URL, echo=True)
