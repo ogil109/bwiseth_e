@@ -1,27 +1,25 @@
-version: '3'
-
 services:
-  app:
-    build: .
-    depends_on:
-      - db
-    ports:
-      - "8000:8000"
+  env-generator:
+    build:
+      context: .
+      target: app-env
     volumes:
-      - ./config.json:/app/config.json
-    command: poetry run python ./src/main.py
+      - shared_env:/shared_env
+    healthcheck:
+      test: ["CMD", "test", "-f", "/shared_env/.env"]
+      interval: 2s
+      retries: 3
+      start_period: 1s
+      timeout: 2s
 
-  db:
-    image: postgres
-    env_file:
-      - .env
-    environment:
-      - POSTGRES_USER=${database_username}
-      - POSTGRES_PASSWORD=${database_password}
-      - POSTGRES_DB=${database_name}
-
-  tests:
-    build: .
-    command: pytest
+  db_mock:
+    image: busybox
     depends_on:
-      - db
+      env-generator:
+        condition: service_healthy
+    volumes:
+      - shared_env:/shared_env
+    command: ["sh", "-c", ". /shared_env/.env && env"]
+
+volumes:
+  shared_env:

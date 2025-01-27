@@ -4,7 +4,7 @@
         "intervals": ["1m", "15m", "4h", "1d", "1w"]
     },
     "database": {
-        "host": "localhost",
+        "host": "db_localhost",
         "port": 5432,
         "username": "postgres",
         "password": "password",

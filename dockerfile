@@ -1,21 +1,18 @@
-# Use the official Python image as a base
-FROM python:3.12.6-slim
-
-# Set the working directory to /app
+### Stage 1: Build .env file from config.json
+FROM python:3.12.6-slim AS app-env
 WORKDIR /app
-
 # Generate the .env file from the JSON file, flattening nested objects
 COPY config.json .
-RUN jq -r '.. | select(type == "object") | to_entries[] | select(.value | type == "object") | .key as $parent | .value | to_entries[] | ($parent + "_" + .key) + "=" + (.value | tostring)' config.json > .env
+RUN mkdir /shared_env
+RUN apt-get update && apt-get install -y jq && \
+    jq -r '.. | select(type == "object") | to_entries[] | select(.value | type == "object") | .key as $parent | .value | to_entries[] | ($parent + "_" + .key) + "=" + (.value | tostring)' config.json > /shared_env/.env
 
-# Copy the pyproject.toml and poetry.lock files into the container
+### Stage 2: Build the application
+FROM app-env AS app
+WORKDIR /app
 COPY pyproject.toml poetry.lock ./
-
-# Install the dependencies using Poetry
-RUN poetry install
-
-# Copy the rest of the code into the container
+RUN apt-get update && apt-get install -y curl && \
+    curl -sSL https://install.python-poetry.org | python3 - && \
+    poetry install
 COPY . .
-
-# Expose the port that your app uses (if any)
 EXPOSE 8000

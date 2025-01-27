@@ -1,0 +1,67 @@
+services:
+  env-generator:
+    build:
+      context: .
+      target: app-env
+    volumes:
+      - shared_env:/shared_env
+    command: ["bash", "-c", "cp /app/.env /shared_env/.env"]
+    healthcheck:
+      test: ["CMD", "test", "-f", "/shared_env/.env"]
+      interval: 5s
+      retries: 3
+      start_period: 5s
+      timeout: 2s
+
+  db_localhost:
+    image: postgres
+    depends_on:
+      env-generator:
+        condition: service_healthy
+    volumes:
+      - shared_env:/shared_env
+    env_file:
+      - /shared_env/.env
+    ports:
+      - "${database_port}:${database_port}"
+    environment:
+      POSTGRES_USER: "${database_username}"
+      POSTGRES_PASSWORD: "${database_password}"
+      POSTGRES_DB: "${database_name}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h ${database_host} -p ${database_port} -U ${database_username}"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 3s
+
+  app:
+    build: .
+    depends_on:
+      env-generator:
+        condition: service_healthy
+      db_localhost:
+        condition: service_healthy
+    volumes:
+      - shared_env:/shared_env
+    env_file:
+      - /shared_env/.env
+    ports:
+      - "8000:8000"
+    command: poetry run python ./src/main.py
+
+  tests:
+    build: .
+    depends_on:
+      env-generator:
+        condition: service_healthy
+      db_localhost:
+        condition: service_healthy
+    volumes:
+      - shared_env:/shared_env
+    env_file:
+      - /shared_env/.env
+    command: pytest
+
+volumes:
+  shared_env:
