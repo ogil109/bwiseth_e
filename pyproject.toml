@@ -1,24 +1,25 @@
 [tool.poetry]
 name = "bwiseth-extract"
 version = "0.1.0"
-description = "Extraction of raw data from public APIs and writing to database."
+description = "Extraction of raw BTC/ETH data from public APIs and writing to Kafka topic."
 authors = ["Oscar Gil <hello@oscargilbalaguer.com>"]
 readme = "README.md"
-package-mode = false
+package-mode = true
 
 [tool.poetry.dependencies]
 python = "^3.12"
 pulumi = "^3.133.0"
 pulumi-aws = "^6.52.0"
-sqlalchemy = "^2.0.35"
 websockets = "^13.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.7.0"
 pre-commit = "^4.0.1"
 pytest = "^8.3.3"
-isort = "^5.13.2"
-black = "^24.10.0"
+
+[tool.ruff]
+line-length = 100
+fix = true
 
 [tool.ruff.lint]
 select = [
@@ -27,20 +28,13 @@ select = [
     "W",  # PEP8 warnings (like indentation and whitespace issues)
     "B",  # Bug-prone patterns (flake8-bugbear)
     "C",  # Complexity checks (McCabe)
+    "I",  # Import order (isort)
+    "Q",  # Quotes consistency (flake8-quotes)
+    "UP"  # New PEP8 rules that are not yet enabled by default
 ]
-
-[tool.ruff]
-line-length = 100
 
 [tool.ruff.format]
 docstring-code-format = true
-
-[tool.black]
-line-length = 100
-
-[tool.isort]
-profile = "black"
-line_length = 100
 
 [build-system]
 requires = ["poetry-core"]
