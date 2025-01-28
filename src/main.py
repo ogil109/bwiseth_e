@@ -7,8 +7,8 @@ from src.utils.load_config import Config
 
 # Entry point for running the script
 if __name__ == "__main__":
-    # Load configuration
-    config = Config("../config.json")
+    # Load configuration from Docker root directory
+    config = Config("/app/config.json")
 
     # Get Kafka configuration
     producer = Producer(config.get_kafka_config())
