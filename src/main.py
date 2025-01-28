@@ -1,12 +1,17 @@
 import asyncio
 
-from src import init_db
+from confluent_kafka import Producer
+
 from src.ingestion.extract_kline import listen
+from src.utils.load_config import Config
 
 # Entry point for running the script
 if __name__ == "__main__":
-    # Initialize the database (create tables if necessary)
-    init_db()
+    # Load configuration
+    config = Config("../config.json")
+
+    # Get Kafka configuration
+    producer = Producer(config.get_kafka_config())
 
     # Start listening to the WebSocket
     loop = asyncio.get_event_loop()

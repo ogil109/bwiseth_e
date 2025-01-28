@@ -3,11 +3,15 @@
         "symbols": ["btcusdt", "ethusdt"],
         "intervals": ["1m", "15m", "4h", "1d", "1w"]
     },
-    "database": {
-        "host": "localhost",
-        "port": 5432,
-        "username": "postgres",
-        "password": "password",
-        "name": "postgres"
+    "kafka": {
+        "bootstrap_servers": "localhost:9092",
+        "client_id": "kline-producer",
+        "acks": "all",
+        "retries": 3,
+        "linger_ms": 5,
+        "batch_size": 16384,
+        "buffer_memory": 33554432,
+        "compression_type": "gzip",
+        "security_protocol": "PLAINTEXT"
     }
 }
