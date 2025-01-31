@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    volumes:
+      - ./config:/app/config
+    ports:
+      - "80:80"
+
+  test:
+    build: .
+    command: ["poetry", "run", "pytest", "--maxfail=1", "--disable-warnings"]
+    volumes:
+      - .:/app
+    depends_on:
+      - app
+
+volumes:
+  config:
+    driver: local
